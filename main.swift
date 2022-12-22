@@ -21,22 +21,20 @@ The substring "BBBB" has the longest repeating letters, which is 4.
 func characterReplacement(_ s: String, _ k: Int) -> Int {
     var s = s.map(Character.init)
     var maxLength = 0
-    var maxCharCount = 0
+    var maxCount = 0
     var counts: [Character: Int] = [:]
-    var leftIdx = 0, rightIdx = 0
+    var leftIdx = 0
 
-    while leftIdx < s.count, rightIdx < s.count {
-        let currLength = rightIdx - leftIdx + 1
+    for rightIdx in s.indices {
         counts[s[rightIdx], default: 0] += 1
-        maxCharCount = max(counts[s[rightIdx]]!, maxCharCount)
-        if currLength - maxCharCount <= k {
-            maxLength = max(currLength, maxLength)
-            rightIdx += 1
-        } else {
+        maxCount = max(counts[s[rightIdx]]!, maxCount)
+
+        while (rightIdx - leftIdx + 1) - maxCount > k {
             counts[s[leftIdx], default: 0] -= 1
-            counts[s[rightIdx], default: 0] -= 1 // Avoids double count
             leftIdx += 1
         }
+
+        maxLength = max((rightIdx - leftIdx + 1), maxLength)
     }
 
     return maxLength
